@@ -1,0 +1,65 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}	
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "se.transmode.gradle:gradle-docker:1.2"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: "io.spring.dependency-management"
+apply plugin: 'org.springframework.boot'
+apply plugin: 'docker'
+
+// This is used as the docker image prefix (org)
+group = 'lavkesh'
+
+dependencyManagement {
+     imports {          
+          mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR3'
+     }
+}
+
+jar {
+    archiveName = 'spring-eureka.jar'
+    baseName = 'spring-eureka'
+    version =  '0.0.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile 'org.springframework.cloud:spring-cloud-starter-eureka-server'
+    compile 'org.springframework.boot:spring-boot-starter-security'   
+    compile 'org.springframework.cloud:spring-cloud-starter-hystrix-dashboard' 
+    testCompile("org.springframework.boot:spring-boot-starter-test") {
+        exclude module: "commons-logging"
+    }
+}
+
+// Build docker image task
+task buildDocker(type: Docker, dependsOn: build) {
+    applicationName = jar.baseName
+    dockerfile = file('Docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
+
+// application config task
+apply from: 'config.gradle'
