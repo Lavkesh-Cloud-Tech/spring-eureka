@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.3.RELEASE'
+		springBootVersion = '1.5.2.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -19,11 +19,11 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'docker'
 
 // This is used as the docker image prefix (org)
-group = 'lavkesh'
+group = 'lavkesh_spring_cloud'
 
 dependencyManagement {
      imports {          
-          mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR3'
+          mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR6'
      }
 }
 
@@ -51,8 +51,9 @@ dependencies {
 
 // Build docker image task
 task buildDocker(type: Docker, dependsOn: build) {
+    push = true
     applicationName = jar.baseName
-    dockerfile = file('Docker/Dockerfile')
+    dockerfile = file('Dockerfile')
     doFirst {
         copy {
             from jar
