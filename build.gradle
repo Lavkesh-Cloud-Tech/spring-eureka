@@ -51,15 +51,16 @@ dependencies {
 
 // Build docker image task
 task buildDocker(type: Docker, dependsOn: build) {
-    push = true
+    push = false
+    baseImage = 'frolvlad/alpine-oraclejdk8:slim'
     applicationName = jar.baseName
-    dockerfile = file('Dockerfile')
-    doFirst {
-        copy {
-            from jar
-            into stageDir
-        }
+    addFile {
+        from jar
+        rename {'app.jar'}
     }
+    runCommand "touch /app.jar"
+    entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
+    exposePort(8080)
 }
 
 // application config task
