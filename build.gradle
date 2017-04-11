@@ -18,9 +18,6 @@ apply plugin: "io.spring.dependency-management"
 apply plugin: 'org.springframework.boot'
 apply plugin: 'docker'
 
-// This is used as the docker image prefix (org)
-group = 'lavkesh_spring_cloud'
-
 dependencyManagement {
      imports {          
           mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR6'
@@ -48,6 +45,9 @@ dependencies {
         exclude module: "commons-logging"
     }
 }
+
+// This is used as the docker image prefix (org)
+group = 'lavkesh_spring_cloud'
 
 // Build docker image task
 task buildDocker(type: Docker, dependsOn: build) {
