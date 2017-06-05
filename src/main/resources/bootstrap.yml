@@ -5,7 +5,7 @@ server:
 spring:
   application:
     name: eureka
-  profile:
+  profiles:
     active: local
 
 eureka:
@@ -19,5 +19,5 @@ security:
   basic:
     enabled: true
   user:
-    name: test-eureka
-    password: test-password
+    name: ${DISCOVERY_USERNAME}
+    password: ${DISCOVERY_PASSWORD}

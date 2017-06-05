@@ -1,13 +1,12 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.2.RELEASE'
+		springBootVersion = '1.5.3.RELEASE'
 	}
 	repositories {
 		mavenCentral()
 	}	
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "se.transmode.gradle:gradle-docker:1.2"
     }
 }
 
@@ -16,17 +15,16 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: "io.spring.dependency-management"
 apply plugin: 'org.springframework.boot'
-apply plugin: 'docker'
 
 dependencyManagement {
      imports {          
-          mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR6'
+          mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Camden.SR7'
      }
 }
 
 jar {
-    archiveName = 'spring-eureka.jar'
-    baseName = 'spring-eureka'
+    archiveName = 'eureka_discovery_server.jar'
+    baseName = 'eureka_discovery_server'
     version =  '0.0.1'
 }
 
@@ -44,23 +42,6 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test") {
         exclude module: "commons-logging"
     }
-}
-
-// This is used as the docker image prefix (org)
-group = 'lavkesh_spring_cloud'
-
-// Build docker image task
-task buildDocker(type: Docker, dependsOn: build) {
-    push = false
-    baseImage = 'frolvlad/alpine-oraclejdk8:slim'
-    applicationName = jar.baseName
-    addFile {
-        from jar
-        rename {'app.jar'}
-    }
-    runCommand "touch /app.jar"
-    entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', '/app.jar'])
-    exposePort(8080)
 }
 
 // application config task
