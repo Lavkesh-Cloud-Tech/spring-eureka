@@ -2,6 +2,8 @@
 set -e
 
 APP_NAME=eureka-discovery
+APP_VERSION=$1
+DOCKER_MACHINE=${2:-192.168.99.100}
 echo "$APP_NAME"
 CONTAINER_ID=$(docker ps -a -f name="$APP_NAME" -q)
 
@@ -22,4 +24,5 @@ docker run -d --hostname $APP_NAME --name $APP_NAME \
 -e SPRING_PROFILES_ACTIVE=dev \
 -e DISCOVERY_USERNAME=eureka-user \
 -e DISCOVERY_PASSWORD=password \
-lavkesh/eureka_discovery_server:$1
+-e DOCKER_MACHINE=$DOCKER_MACHINE \
+lavkesh/eureka_discovery_server:$APP_VERSION

@@ -14,6 +14,9 @@ eureka:
     fetchRegistry: false
   server:
     waitTimeInMsWhenSyncEmpty: 0
+  instance:
+    hostname: ${DOCKER_MACHINE}
+    preferIpAddress: true
 
 security:
   basic:
