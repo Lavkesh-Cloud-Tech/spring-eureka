@@ -1,4 +1,4 @@
-FROM frolvlad/alpine-oraclejdk8:slim
+FROM nimmis/java-centos:openjdk-8-jdk
 VOLUME /tmp
 
 ADD build/libs/eureka_discovery_server.jar /app.jar

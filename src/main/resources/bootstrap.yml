@@ -1,26 +1,28 @@
 server:
   port: 8080
-  context-path: /eureka
+  context-path: /registry
 
 spring:
   application:
-    name: eureka
+    name: eureka-registry-server
   profiles:
     active: local
 
 eureka:
+  instance:
+    preferIpAddress: true
+    hostname: registry-server
   client:
     registerWithEureka: false
     fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8080/registry/
   server:
     waitTimeInMsWhenSyncEmpty: 0
-  instance:
-    hostname: ${DOCKER_MACHINE}
-    preferIpAddress: true
 
 security:
   basic:
     enabled: true
   user:
-    name: ${DISCOVERY_USERNAME}
-    password: ${DISCOVERY_PASSWORD}
+    name: ${REGISTRY_USERNAME}
+    password: ${REGISTRY_PASSWORD}

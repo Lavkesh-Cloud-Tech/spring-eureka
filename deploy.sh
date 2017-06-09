@@ -1,28 +1,24 @@
 #!/bin/bash
 set -e
 
-APP_NAME=eureka-discovery
-APP_VERSION=$1
-DOCKER_MACHINE=${2:-192.168.99.100}
-echo "$APP_NAME"
-CONTAINER_ID=$(docker ps -a -f name="$APP_NAME" -q)
+IMAGE_NAME=lavkesh/eureka_registry_server
+IMAGE_VERSION=$1
+NETWORK_NAME=my-bridge
+CONTAINER_NAME=${2:-registry-server}
+echo "CONTAINER NAME => $CONTAINER_NAME"
+echo "NETWORK NAME => $NETWORK_NAME"
 
-if [[ $? -eq 0 ]]; then
-   if [[ $CONTAINER_ID != "" ]]; then
-    echo "Removing CONTAINER_ID  =>  $CONTAINER_ID"
-    docker stop $CONTAINER_ID
-    docker rm -f $CONTAINER_ID
-   fi
-else
-  #Fail
-  echo "'docker ps -a -f name=$APP_NAME -q' command not run successfully!"
-  exit 1
+echo "======================== Stop $CONTAINER_NAME container if exist ======================="
+CONTAINER_ID=$(docker ps -a -f name="$CONTAINER_NAME" -q)
+if [[ $CONTAINER_ID != "" ]]; then
+  echo "Removing CONTAINER_ID  =>  $CONTAINER_ID"
+  docker stop $CONTAINER_ID
+  docker rm -f $CONTAINER_ID
 fi
 
-docker run -d --hostname $APP_NAME --name $APP_NAME \
--p 8761:8080 \
+echo "======================== Starting container => $CONTAINER_NAME ======================="
+docker run -d --name $CONTAINER_NAME \
+--network=$NETWORK_NAME -p 8761:8080 \
 -e SPRING_PROFILES_ACTIVE=dev \
--e DISCOVERY_USERNAME=eureka-user \
--e DISCOVERY_PASSWORD=password \
--e DOCKER_MACHINE=$DOCKER_MACHINE \
-lavkesh/eureka_discovery_server:$APP_VERSION
+-e REGISTRY_USERNAME=eureka-user -e REGISTRY_PASSWORD=password \
+$IMAGE_NAME:$IMAGE_VERSION
