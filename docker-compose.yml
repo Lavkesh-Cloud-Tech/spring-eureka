@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  registry-server:
+    image: "${IMAGE_NAME}:${IMAGE_VERSION}"
+    ports:
+      - "8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE
+      - REGISTRY_USERNAME
+      - REGISTRY_PASSWORD
+
+
+networks:
+  my-first-bridge-network:
+    driver: bridge
