@@ -12,5 +12,6 @@ services:
 
 
 networks:
-  my-first-bridge-network:
-    driver: bridge
+  default:
+    external:
+      name: my-first-bridge-network
